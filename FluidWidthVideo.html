@@ -223,7 +223,7 @@ $(window).resize(function() {
     
     <pre><code>var $allVideos = $("object, embed"),</code></pre>
     
-    <p>And also, interestingly enough, jQuery doesn't allow the use of it's .data() function on those types of elements<sup>3</sup>, so we'll need to use HTML5 data attributes<sup>2</sup> to store and retrieve our aspect ratio data.</p>
+    <p>And important to note: jQuery doesn't allow the use of it's .data() function on those types of elements, so we'll need to use HTML5 data attributes<sup>2</sup> to store and retrieve our aspect ratio data.</p>
     
     <pre><code>$(this)
    .attr('data-aspectRatio', this.height / this.width)
@@ -245,19 +245,16 @@ $el
 	  <p>So let's say we are in the position where we have lots of legacy content, which includes videos of all makes and models, and we're redesigning our site to be fluid. The most efficient route is going to be combine everything we've learned in this article and put it together. See the demo page for the complete workings.</p>
 	  
 	  <p><a href="demo.html">View Demo</a></p>
-	  
-	   <br><br><br><hr>
+	
+	  <p>This article and the demo are all available <a href="https://github.com/chriscoyier/Fluid-Width-Video">on GitHub</a>.</p>
+	
+	  <br><br><br><hr>
 	 
-	  
 	  <sup>1</sup> <small>Literally all browsers will render iframe, canvas, embed, and object tags as 300px x 150px if not otherwise declared. Even if this isn't present in the UA stylesheet.</small>
 	  
 	  <br>
 	  
 	  <sup>2</sup> <small>You could misuse a <code>rel</code> attribute or something if you aren't using HTML5.</small>
-	  
-	  <br>
-	  
-	  <sup>3</sup> <small>At least, via 1.6.2.</small>
     
   </article>
   
@@ -290,9 +287,7 @@ $el
     
     }).resize();
   </script>
-  
-  
-  
+    
 </body>
   
 </html>
