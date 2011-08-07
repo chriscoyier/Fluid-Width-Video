@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset=utf-8>
+  <title>Fluid Width Video</title>
+
+  <style>
+    * { margin: 0; padding: 0; }
+    body { 
+      font: 16px/1.4 Georgia, Serif;
+      width: 50%; 
+      margin: 80px auto; 
+      background: url(images/bglines.png);
+    }
+    h1 { font-weight: normal; font-size: 42px; }
+    h1, p, pre, video, h2, figure, h3, ol { margin: 0 0 15px 0; }
+    h2 { margin-top: 80px; }
+    h1 { margin-bottom: 40px; }
+    li { margin: 0 0 5px 20px; }
+    article { background: white; padding: 10%; }
+    pre { display: block; padding: 10px; background: #eee; overflow-x: auto; font: 12px Monaco, MonoSpace; }
+    
+    img { max-width: 100%; }
+    
+    .videoWrapper {
+    	position: relative;
+    	padding-bottom: 56.25%;
+    	padding-top: 25px;
+    	height: 0;
+    }
+    .videoWrapper iframe,
+    .videoWrapper object,
+    .videoWrapper embed {
+    	position: absolute;
+    	top: 0;
+    	left: 0;
+    	width: 100%;
+    	height: 100%;
+    }
+    video {
+	  width: 100%    !important;
+	  height: auto   !important;
+	}
+    figure { display: block; background: #eee; padding: 10px; }
+    figcaption { display: block; text-align: center; margin: 10px 0; font-style: italic; font-size: 14px; orphans: 2; }
+  </style>
+</head>
+
+<body>
+
+  <article>
+
+    <h1>Fluid Width Video</h1>
+    
+    <p>IN A WORLD of responsive and fluid layouts on the web ONE MEDIA TYPE stands in the way of perfect harmony: video. There are lots of ways in which video can be displayed on your site. You might be self hosting the video and presenting it via the HTML5 &lt;video> tag. You might be using <a href="http://youtube.com">YouTube</a> or <a href="http://vimeo.com">Vimeo</a> which provides &lt;iframe> code to display videos. You might be using <a href="http://viddler.com">Viddler</a> or <a href="http://blip.tv">Blip.tv</a> which provide nested object/embed tags to display a Flash player. In each of these scenarios, it is very common for a static width and height to be declared.</p>
+    
+    <pre><code>&lt;video <strong>width="400" height="300"</strong> ... </code></pre>
+    
+    <pre><code>&lt;iframe <strong>width="400" height="300"</strong> ... </code></pre>
+    
+    <pre><code>&lt;object <strong>width="400" height="300" ...</strong>
+      &lt;embed <strong>width="400" height="300"</strong> ... </code></pre>
+    
+    <p>Guess what. Declaring static widths isn't a good idea in fluid width environments. What if the parent container for that video shrinks narrower than the declared 400px? It will bust out and probably look ridiculous and embarrassing.</p>
+    
+    <figure>
+      <img src="images/breakout.png" alt="breakout">
+      <figcaption>Simple and contrived, but still ridiculous and embrassing.</figcaption>
+    </figure>
+    
+    <p>So can't we just do this?</p>
+    
+    <pre><code>&lt;video <strong>width="100%"</strong> ... </code></pre>
+    
+    <p>Well, yep, you can. If you are using standard HTML5 video, That will make the video fit the width of the container. It's important that you remove the height declaration when you do this, so that the aspect ratio of the video is maintained as it grows and shrinks, lest you get awkward "bars" to fill the empty space (unlike images, the actual video maintains it's aspect ratio regardless of the size of the element). You can get there via CSS (and not worry about what's declared in the HTML) like this:
+    
+    <pre><code>video {
+  width: 100%    !important;
+  height: auto   !important;
+}</code></pre>
+        
+    <figure>
+    	<video src="movies/h264.mov" controls></video>
+    	<figcaption>Using HTML5 video, fluid is easy. NOTE: The example video is H.264 only, not in the three-ish formats it needs to be to be viewable in all modern browsers.</figcaption>
+    </figure>
+    
+    <h2>&lt;iframe> Video (YouTube, Vimeo, etc.)</h2>
+    
+    <p>Our little 100% width trick isn't going to help us when dealing with video that is delivered via iframe. Setting a height is required, otherwise browsers will render the iframe at a static height of 150px<sup>1</sup>, which is far too squat for most video and makes for more R&E (Ridiculous and Embarrassing).</p>
+        
+    <figure>
+    <iframe width="100%" src="http://www.youtube.com/embed/n_dZNLr2cME?rel=0&hd=1" frameborder="0" allowfullscreen></iframe>
+      <figcaption>The iframe above is missing it's height attribute. While it's 100% width, it's height is stupidly squat.</figcaption>
+    </figure>
+    
+    <p>Fortunately there are a couple of possible solutions here. One of them was pioneered by Thierry Koblentz and presented on A List Apart in 2009: <a href="http://www.alistapart.com/articles/creating-intrinsic-ratios-for-video/">Creating Intrinsic Ratios for Video</a>. With this technique, you wrap the video in another element which has an intrinsic aspect ratio, then absolute position the video within that. That gives us fluid width with a reasonable height we can count on.</p>
+    
+    <pre><code>&lt;div class="videoWrapper">   
+    &lt;!-- Copy &amp; Pasted from YouTube -->
+    &lt;iframe width="560" height="349" src="http://www.youtube.com/embed/n_dZNLr2cME?rel=0&amp;hd=1" frameborder="0" allowfullscreen>&lt;/iframe>
+&lt;/div></code></pre>
+
+  <pre><code>.videoWrapper {
+	position: relative;
+	padding-bottom: 56.25%; /* 16:9 */
+	padding-top: 25px;
+	height: 0;
+}
+.videoWrapper iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+</code></pre>
+    
+  <figure>
+    <div class="videoWrapper"> 
+      <!-- Copy & Pasted from YouTube -->
+      <iframe width="560" height="349" src="http://www.youtube.com/embed/n_dZNLr2cME?rel=0&hd=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <figcaption>Whatever YouTube iframe embed code you paste within the <code>.videoWrapper</code>, you'll see it presented in a fluid 16:9 box.</figcaption>  
+  </figure>
+    
+  <h3>But, but... aspect ratios, legacy content, non-tech users, etc.</h3>
+  
+  <p>The above technique is awesome, but it has several possible limitations:</p>
+  
+  <ol>
+    <li>It requires wrapper element, so just straight up copy-and-pasting code from YouTube is out. Users will need to be a bit more saavy.</li>
+    <li>If you have legacy content and are redesigning to be fluid, all old videos need HTML adjustments.</li>
+    <li>All videos need to be the same aspect ratio. Otherwise they'll be forced into a different aspect ratio and you'll get the "bars". Or, you'll need a toolbox of class names you can apply to adjust it which is an additional complication.</li>
+  </ol>
+  
+  <p>If either of these limitations apply to you, you might consider a JavaScript solution. Imagine this: when the page loads all videos are looked at and their aspect ratio is saved. Once right away, and whenever the window is resized, all the videos are resized to fill the available width and maintain their aspect ratio. Using the <a href="http://jquery.com/">jQuery</a> JavaScript Library, that looks like this:</p>
+  
+  <pre><code>// Find all YouTube videos
+var $allVideos = $("iframe[src^='http://www.youtube.com']"),
+
+    // The element that is fluid width
+    $fluidEl = $("body");
+
+// Figure out and save aspect ratio for each video
+$allVideos.each(function() {
+
+  $(this)
+    .data('aspectRatio', this.height / this.width)
+
+    // and remove the hard coded width/height
+    .removeAttr('height')
+    .removeAttr('width');
+
+});
+
+// When the window is resized
+$(window).resize(function() {
+
+  var newWidth = $fluidEl.width();
+
+  // Resize all videos according to their own aspect ratio
+  $allVideos.each(function() {
+
+    var $el = $(this);
+    $el
+      .width(newWidth)
+      .height(newWidth * $el.data('aspectRatio'));
+
+  });
+
+// Kick off one resize to fix all videos on page load
+}).resize();</code></pre>
+
+    <h3>Adding Vimeo</h3>
+    
+    <p>Vimeo uses iframes too, so what works for YouTube will work for Vimeo. The HTML/CSS technique doesn't need any alteration at all, and the jQuery solution could be fixed changing a single line:</p>
+    
+    <pre><code>var $allVideos = $("iframe[src^='http://player.vimeo.com'], iframe[src^='http://www.youtube.com']"),</code></pre>
+    
+    <figure>
+    	<iframe class="js-resize" src="http://player.vimeo.com/video/25924530?title=0&amp;byline=0&amp;portrait=0" width="400" height="225" frameborder="0"></iframe>
+    	<figure>Updating our script to deal with Vimeo ain't no thing.</figure>
+    </figure>
+    
+    <h2>&lt;object> / &lt;embed> Video (Viddler, Blip.tv, etc.)</h2>
+    
+    <p>Some home-brew video embedding, as well as video sharing services like Viddler and Blip.tv, use old-school nested object and embed tags. YouTube also did it this was until fairly recently. It's old-school and non-standard, but this technique was very widely used because Flash was everywhere and it just worked.</p> 
+    
+    <p>Object/embed suffers from the same problem that iframes do, the width and height are required lest R&E results.</p>
+    
+    <figure>
+    <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="100%" id="viddler"><param name="movie" value="http://www.viddler.com/player/d6c37b62/" /><param name="allowScriptAccess" value="always" /><param name="allowFullScreen" value="true" /><param name="flashvars" value="fake=1"/><embed src="http://www.viddler.com/player/d6c37b62/" width="100%" type="application/x-shockwave-flash" allowScriptAccess="always" allowFullScreen="true" flashvars="fake=1" name="viddler" ></embed></object>
+      <figcaption>Without a set height, this object/embed collapses to 150px in height. Turns out &lt;canvas> also has this behavior, despite not being explicitly set in the User Agent (browser) default stylesheet.</figcaption>
+    </figure>
+    
+    <p>For a pure HTML/CSS solution, we can again look to Thierry's solution if we're OK with adding additional HTML and imposing aspect ratio.</p>
+    
+    <pre><code>.videoWrapper {
+	position: relative;
+	padding-bottom: 56.25%; /* 16:9 */
+	padding-top: 25px;
+	height: 0;
+}
+.videoWrapper object,
+.videoWrapper embed,  {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+</code></pre>
+
+    <figure>
+      <div class="videoWrapper">
+        <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="500" height="400" id="viddler"><param name="movie" value="http://www.viddler.com/player/d6c37b62/" /><param name="allowScriptAccess" value="always" /><param name="allowFullScreen" value="true" /><param name="flashvars" value="fake=1"/><embed src="http://www.viddler.com/player/d6c37b62/" width="500" height="400"  type="application/x-shockwave-flash" allowScriptAccess="always" allowFullScreen="true" flashvars="fake=1" name="viddler" ></embed></object>
+      </div>
+      <figcaption>HTML &amp; CSS gettin' it done, son.</figcaption>
+    </figure>
+    
+    <p>If we don't want to bother with the extra HTML wrapper and CSS complications, we could again rely on JavaScript. Our script can remain largely the same, except we're going to look for object and embed elements rather than video or iframe elements.</p>
+    
+    <pre><code>var $allVideos = $("object, embed"),</code></pre>
+    
+    <p>And also, interestingly enough, jQuery doesn't allow the use of it's .data() function on those types of elements<sup>3</sup>, so we'll need to use HTML5 data attributes<sup>2</sup> to store and retrieve our aspect ratio data.</p>
+    
+    <pre><code>$(this)
+   .attr('data-aspectRatio', this.height / this.width)
+   
+   ...
+   
+$el
+   .width(newWidth)
+   .height(newWidth * $el.attr('data-aspectRatio'));</code></pre>
+    
+    <figure>
+        <embed src="http://blip.tv/play/gfgp5s0WAg" type="application/x-shockwave-flash" width="480" height="390" wmode="transparent" allowscriptaccess="always" allowfullscreen="true" class="js-resize"></embed>
+      </div>
+      <figcaption>JavaScript making it more foolproof.</figcaption>
+    </figure>
+    
+    <h2>Putting it all together</h2>
+  
+	  <p>So let's say we are in the position where we have lots of legacy content, which includes videos of all makes and models, and we're redesigning our site to be fluid. The most efficient route is going to be combine everything we've learned in this article and put it together. See the demo page for the complete workings.</p>
+	  
+	  <p><a href="demo.html">View Demo</a></p>
+	  
+	   <br><br><br><hr>
+	 
+	  
+	  <sup>1</sup> <small>Literally all browsers will render iframe, canvas, embed, and object tags as 300px x 150px if not otherwise declared. Even if this isn't present in the UA stylesheet.</small>
+	  
+	  <br>
+	  
+	  <sup>2</sup> <small>You could misuse a <code>rel</code> attribute or something if you aren't using HTML5.</small>
+	  
+	  <br>
+	  
+	  <sup>3</sup> <small>At least, via 1.6.2.</small>
+    
+  </article>
+  
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+  <script>
+    var $allVideos = $(".js-resize"),
+        $fluidEl = $("figure");
+    
+    $allVideos.each(function() {
+    
+      $(this)
+        // jQuery .data does not work on object/embed elements
+        .attr('data-aspectRatio', this.height / this.width)
+        .removeAttr('height')
+        .removeAttr('width');
+    
+    });
+    
+    $(window).resize(function() {
+    
+      var newWidth = $fluidEl.width();
+      $allVideos.each(function() {
+      
+        var $el = $(this);
+        $el
+            .width(newWidth)
+            .height(newWidth * $el.attr('data-aspectRatio'));
+      
+      });
+    
+    }).resize();
+  </script>
+  
+  
+  
+</body>
+  
+</html>

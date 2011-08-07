@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset=utf-8>
+  <title>Fluid Width Video</title>
+
+  <style>
+    * { margin: 0; padding: 0; }
+    body { 
+      font: 16px/1.4 Georgia, Serif;
+      width: 50%; 
+      margin: 80px auto; 
+      background: url(images/bglines.png);
+    }
+    h1 { font-weight: normal; font-size: 42px; }
+    h1, p, pre, video, h2, figure, h3, ol, script, style { margin: 0 0 15px 0; }
+    h2 { margin-top: 80px; }
+    h1 { margin-bottom: 40px; }
+    li { margin: 0 0 5px 20px; }
+    article { background: white; padding: 10%; }
+    pre, article style, article script { 
+    	white-space: pre; 
+    	display: block; 
+    	padding: 10px; 
+    	background: #eee; 
+    	overflow-x: auto; 
+    	font: 12px Monaco, MonoSpace; 
+    }
+    
+    img { max-width: 100%; }
+    
+    figure { display: block; background: #eee; padding: 10px; }
+    figcaption { display: block; text-align: center; margin: 10px 0; font-style: italic; font-size: 14px; orphans: 2; }
+  </style>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+</head>
+
+<body>
+
+  <article>
+
+    <h1>DEMO: Fluid Width Video</h1>
+    
+    <p><a href="FluidWidthVideo.html">&larr; Back to article</a></p>
+    
+    <h2>CSS</h2>
+    
+    <p>For cases where we use HTML5 video directly through &lt;video> tags.</p>
+    
+    <style scoped>video {
+  width: 100%    !important;
+  height: auto   !important;
+}</style>
+
+	<h2>jQuery JavaScript</h2>
+    
+    <p>For everything else...</p>
+    
+    <script>$(function() {
+    
+    var $allVideos = $("iframe[src^='http://player.vimeo.com'], iframe[src^='http://www.youtube.com'], object, embed"),
+    $fluidEl = $("figure");
+	    	
+	$allVideos.each(function() {
+	
+	  $(this)
+	    // jQuery .data does not work on object/embed elements
+	    .attr('data-aspectRatio', this.height / this.width)
+	    .removeAttr('height')
+	    .removeAttr('width');
+	
+	});
+	
+	$(window).resize(function() {
+	
+	  var newWidth = $fluidEl.width();
+	  $allVideos.each(function() {
+	  
+	    var $el = $(this);
+	    $el
+	        .width(newWidth)
+	        .height(newWidth * $el.attr('data-aspectRatio'));
+	  
+	  });
+	
+	}).resize();
+
+});</script>
+
+	<h2>Examples</h2>
+
+	<p>All these videos use code just straight up copy-and-pasted from their source.</p>
+
+	<figure>
+		<iframe width="425" height="349" src="http://www.youtube.com/embed/FKWwdQu6_ok" frameborder="0" allowfullscreen></iframe>
+		<figcaption>YouTube</figcaption>
+	</figure>
+	
+	<figure>
+		<iframe src="http://player.vimeo.com/video/25708134?title=0&amp;byline=0&amp;portrait=0" width="400" height="225" frameborder="0"></iframe>
+		<figcaption>Vimeo</figcaption>
+	</figure>
+	
+	<figure>
+		<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="437" height="288" id="viddler"><param name="movie" value="http://www.viddler.com/player/d6c37b62/" /><param name="allowScriptAccess" value="always" /><param name="allowFullScreen" value="true" /><param name="flashvars" value="fake=1"/><embed src="http://www.viddler.com/player/d6c37b62/" width="437" height="288" type="application/x-shockwave-flash" allowScriptAccess="always" allowFullScreen="true" flashvars="fake=1" name="viddler" ></embed></object>
+		<figcaption>Viddler</figcaption>
+	</figure>
+	
+	<figure>
+		<embed src="http://blip.tv/play/AYHCnikC" type="application/x-shockwave-flash" width="550" height="396" wmode="transparent" allowscriptaccess="always" allowfullscreen="true" ></embed>
+		<figcaption>Blip.tv</figcaption>
+	</figure>
+	
+	<figure>
+		<video src="movies/h264.mov" controls></video>
+		<figcaption>HTML5 Video Directly</figcaption>
+	</figure>
+        
+  </article>
+  
+  
+  
+  
+  
+</body>
+  
+</html>
