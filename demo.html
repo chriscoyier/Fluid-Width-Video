@@ -74,10 +74,10 @@
 	
 	$(window).resize(function() {
 	
-	  var newWidth = $fluidEl.width();
 	  $allVideos.each(function() {
 	  
 	    var $el = $(this);
+        var newWidth = $el.parent().width();
 	    $el
 	        .width(newWidth)
 	        .height(newWidth * $el.attr('data-aspectRatio'));
